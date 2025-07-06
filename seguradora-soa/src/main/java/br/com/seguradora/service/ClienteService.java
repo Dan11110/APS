@@ -7,5 +7,5 @@ import br.com.seguradora.model.Cliente;
 @WebService
 public interface ClienteService {
     @WebMethod
-    Cliente consultaClientePorCpf(String cpf);
+    String consultaClientePorCpf(String cpf);
 }

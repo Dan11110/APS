@@ -7,6 +7,6 @@ import br.com.seguradora.model.Veiculo;
 @WebService
 public interface VeiculoService {
     @WebMethod
-    Veiculo consultaVeiculoPorPlaca(String placa);
+    String consultaVeiculoPorPlaca(String placa);
 }
 

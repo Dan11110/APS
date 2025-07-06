@@ -5,6 +5,8 @@ import br.com.seguradora.model.Cliente;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -14,9 +16,10 @@ import java.util.List;
 public class ClienteServiceImpl implements ClienteService {
 
     @Override
-    public Cliente consultaClientePorCpf(String cpf) {
-        try {
-            String json = new String(Files.readAllBytes(Paths.get("data/clientes.json")));
+    public String consultaClientePorCpf(String cpf) {
+       try (InputStream is = getClass().getClassLoader().getResourceAsStream("clientes.json")) {
+            
+            String json = new String(is.readAllBytes(), StandardCharsets.UTF_8);
             JSONArray arr = new JSONArray(json);
 
             for (int i = 0; i < arr.length(); i++) {
@@ -29,10 +32,10 @@ public class ClienteServiceImpl implements ClienteService {
                     for (int j = 0; j < a.length(); j++) {
                         apolices.add(a.getString(j));
                     }
-                    
-                    Cliente c = new Cliente(cpf, nome,apolices);
-                    
-                    return c;
+
+                    Cliente c = new Cliente(cpf, nome, apolices);
+
+                    return c.toString();
                 }
             }
 

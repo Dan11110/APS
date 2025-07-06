@@ -5,6 +5,8 @@ import br.com.seguradora.model.Veiculo;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -14,9 +16,9 @@ import java.util.List;
 public class VeiculoServiceImpl implements VeiculoService {
 
     @Override
-    public Veiculo consultaVeiculoPorPlaca(String placa) {
-        try {
-            String json = new String(Files.readAllBytes(Paths.get("data/veiculos.json")));
+    public String consultaVeiculoPorPlaca(String placa) {
+        try (InputStream is = getClass().getClassLoader().getResourceAsStream("veiculos.json")) {
+            String json = new String(is.readAllBytes(), StandardCharsets.UTF_8);
             JSONArray arr = new JSONArray(json);
 
             for (int i = 0; i < arr.length(); i++) {
@@ -32,7 +34,7 @@ public class VeiculoServiceImpl implements VeiculoService {
 
 
                     Veiculo v = new Veiculo(obj.getString("placa"), obj.getString("ipva"), multas, obj.getString("restricoes"), obj.getBoolean("roubado"));
-                    return v;
+                    return v.toString();
                 }
             }
 
