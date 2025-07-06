@@ -1,0 +1,9 @@
+[
+  {
+    "placa": "ABC1234",
+    "ipva": "Pago",
+    "multas": ["2023-04: Estacionamento irregular"],
+    "restricoes": "Nenhuma",
+    "roubado": false
+  }
+]

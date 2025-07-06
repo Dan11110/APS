@@ -1,0 +1,7 @@
+br\com\seguradora\service\VeiculoService.class
+br\com\seguradora\service\ClienteServiceImpl.class
+br\com\seguradora\model\Cliente.class
+br\com\seguradora\service\VeiculoServiceImpl.class
+br\com\seguradora\server\Publicador.class
+br\com\seguradora\service\ClienteService.class
+br\com\seguradora\model\Veiculo.class
