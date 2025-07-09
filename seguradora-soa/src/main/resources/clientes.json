@@ -2,6 +2,12 @@
   {
     "cpf": "12345678900",
     "nome": "Maria Oliveira",
-    "apolices": ["AP12345", "AP67890"]
+    "apolices": [
+      {
+        "numero": "101",
+        "tipo": "Auto",
+        "validade": "2025-12-31"
+      }
+    ]
   }
 ]

@@ -1,9 +1,15 @@
 [
   {
     "placa": "ABC1234",
-    "ipva": "Pago",
-    "multas": ["2023-04: Estacionamento irregular"],
-    "restricoes": "Nenhuma",
-    "roubado": false
+    "modelo": "Fiat Uno",
+    "ipvaPago": true,
+    "temRestricao": false,
+    "foiRoubado": false,
+    "multas": [
+      {
+        "data": "2023-05-10",
+        "descricao": "Excesso de velocidade"
+      }
+    ]
   }
 ]
