@@ -60,7 +60,10 @@ export default function ConsultaCPFPage() {
 
       const res = await fetch("http://localhost:9090/proxy/cliente", {
         method: "POST",
-        headers: { "Content-Type": "text/xml;charset=UTF-8" },
+        headers: { "Content-Type": "text/xml;charset=UTF-8",
+          "X-System-Name": "consulta-cliente"
+
+        },  
         cache: "no-store",
         body: envelope,
       })

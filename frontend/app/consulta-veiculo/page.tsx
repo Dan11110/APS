@@ -68,7 +68,9 @@ export default function ConsultaVeiculoPage() {
 
       const res = await fetch("http://localhost:9090/proxy/veiculo", {
         method: "POST",
-        headers: { "Content-Type": "text/xml;charset=UTF-8" },
+        headers: { "Content-Type": "text/xml;charset=UTF-8",
+          "X-System-Name": "consulta-veiculo"
+         },
         cache: "no-store",
         body: envelope,
       });

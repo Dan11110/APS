@@ -11,5 +11,30 @@
         "descricao": "Excesso de velocidade"
       }
     ]
+  },
+  {
+    "placa": "ABD1234",
+    "modelo": "Fiat Uno Dado",
+    "ipvaPago": true,
+    "temRestricao": true,
+    "foiRoubado": true,
+    "multas": []
+  },
+  {
+    "placa": "ABE1234",
+    "modelo": "Fiat Uno E",
+    "ipvaPago": true,
+    "temRestricao": false,
+    "foiRoubado": false,
+    "multas": [
+      {
+        "data": "2023-05-10",
+        "descricao": "Excesso de velocidade"
+      },
+      {
+        "data": "2023-06-10",
+        "descricao": "Farol dianteiro inexistente"
+      }
+    ]
   }
 ]
