@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin - Consulta de Dados</title>
+  <style>
+    body { font-family: Arial; padding: 20px; max-width: 600px; margin: auto; }
+    input { padding: 8px; width: 240px; margin-bottom: 10px; }
+    button { padding: 8px 12px; margin-left: 6px; }
+    h2 { margin-top: 30px; }
+    #modal, #mensagem { margin-top: 20px; padding: 15px; border-radius: 8px; display: none; }
+    #modal { background: #e8f5e9; }
+    #mensagem { background: #ffebee; color: #b71c1c; }
+    pre { white-space: pre-wrap; }
+  </style>
+</head>
+<body>
+
+  <h1>Consulta Admin</h1>
+
+  <h2>Consulta Cliente por CPF</h2>
+  <input type="text" id="cpf" placeholder="Digite o CPF">
+  <button onclick="consultarCliente()">Consultar Cliente</button>
+
+  <h2>Consulta Veículo por Placa</h2>
+  <input type="text" id="placa" placeholder="Digite a placa">
+  <button onclick="consultarVeiculo()">Consultar Veículo</button>
+
+  <div id="modal">
+    <h3>Resultado:</h3>
+    <pre id="resultado"></pre>
+  </div>
+  <div id="mensagem"></div>
+
+  <script>
+    async function consultarCliente() {
+      const cpf = document.getElementById("cpf").value.trim();
+      if (!cpf) return alert("Informe o CPF.");
+      const envelope = `
+        <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
+                          xmlns:ser="http://service.seguradora.com.br/">
+          <soapenv:Header/>
+          <soapenv:Body>
+            <ser:consultarClientePorCPF><cpf>${cpf}</cpf></ser:consultarClientePorCPF>
+          </soapenv:Body>
+        </soapenv:Envelope>`;
+      enviarRequisicao(envelope, "cliente");
+    }
+
+    async function consultarVeiculo() {
+      const placa = document.getElementById("placa").value.trim();
+      if (!placa) return alert("Informe a placa.");
+      const envelope = `
+        <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
+                          xmlns:ser="http://service.seguradora.com.br/">
+          <soapenv:Header/>
+          <soapenv:Body>
+            <ser:consultarVeiculoPorPlaca><placa>${placa}</placa></ser:consultarVeiculoPorPlaca>
+          </soapenv:Body>
+        </soapenv:Envelope>`;
+      enviarRequisicao(envelope, "veiculo");
+    }
+
+    async function enviarRequisicao(envelope, tipo) {
+      const url = `http://localhost:9090/proxy/${tipo}`;
+      try {
+        const res = await fetch(url, {
+          method: "POST",
+          headers: {
+            "Content-Type": "text/xml;charset=UTF-8",
+            "X-System-Name": "admin"
+          },
+          body: envelope
+        });
+
+        if (res.status === 403) return mostrarErro("Acesso não autorizado para este serviço.");
+        const text = await res.text();
+        const json = text.match(/<return>(.*?)<\/return>/)?.[1];
+
+        if (!json || json === "{}") mostrarErro(`${tipo === "cliente" ? "Cliente" : "Veículo"} não encontrado.`);
+        else mostrarResultado(json);
+      } catch (err) {
+        mostrarErro("Erro ao consultar o serviço.");
+      }
+    }
+
+    function mostrarResultado(json) {
+      document.getElementById("mensagem").style.display = "none";
+      document.getElementById("resultado").textContent = JSON.stringify(JSON.parse(json), null, 2);
+      document.getElementById("modal").style.display = "block";
+    }
+
+    function mostrarErro(msg) {
+      document.getElementById("modal").style.display = "none";
+      const m = document.getElementById("mensagem");
+      m.textContent = msg;
+      m.style.display = "block";
+    }
+  </script>
+</body>
+</html>
