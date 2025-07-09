@@ -10,3 +10,15 @@ Repositório para a tarefa da matéria de arquitetura e padrão de software
 
 # Como rodar o front: 
 ## Só acessar cada página separada via live server
+
+# Como rodar o frontend com react:
+
+### Abra a pasta frontend no terminal
+
+#### Execute:
+
+1. 
+        npm install
+
+2.      
+        npm run dev
