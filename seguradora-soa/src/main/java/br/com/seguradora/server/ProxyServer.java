@@ -1,13 +1,16 @@
 package br.com.seguradora.server;
 
-import com.sun.net.httpserver.HttpExchange;
-import com.sun.net.httpserver.HttpHandler;
-import com.sun.net.httpserver.HttpServer;
-
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.InetSocketAddress;
 import java.net.URL;
+
+import com.sun.net.httpserver.Headers;
+import com.sun.net.httpserver.HttpExchange;
+import com.sun.net.httpserver.HttpHandler;
+import com.sun.net.httpserver.HttpServer;
 
 public class ProxyServer {
 
@@ -17,68 +20,67 @@ public class ProxyServer {
         server.createContext("/proxy/cliente", new ProxyHandler("http://localhost:8080/ws/cliente"));
         server.createContext("/proxy/veiculo", new ProxyHandler("http://localhost:8080/ws/veiculo"));
 
+        server.setExecutor(null); // usa o executor padrão
+        System.out.println("Proxy rodando em http://localhost:9090");
         server.start();
-        System.out.println("Proxy HTTP ativo em http://localhost:9090");
     }
 
     static class ProxyHandler implements HttpHandler {
-        private final String targetUrl;
+        private final String destino;
 
-        public ProxyHandler(String targetUrl) {
-            this.targetUrl = targetUrl;
+        public ProxyHandler(String destino) {
+            this.destino = destino;
         }
 
         @Override
         public void handle(HttpExchange exchange) throws IOException {
-            String method = exchange.getRequestMethod();
+            // Tratamento de CORS
+            Headers headers = exchange.getResponseHeaders();
+            headers.add("Access-Control-Allow-Origin", "*");
+            headers.add("Access-Control-Allow-Headers", "Content-Type,X-System-Name");
+            headers.add("Access-Control-Allow-Methods", "POST, OPTIONS");
 
-            // Adicionar cabeçalhos CORS para todas as respostas
-            exchange.getResponseHeaders().add("Access-Control-Allow-Origin", "*");
-            exchange.getResponseHeaders().add("Access-Control-Allow-Headers", "Content-Type,Authorization");
-            exchange.getResponseHeaders().add("Access-Control-Allow-Methods", "POST, OPTIONS");
-
-            if ("OPTIONS".equalsIgnoreCase(method)) {
-                // Responde a requisição OPTIONS para preflight
-                exchange.sendResponseHeaders(204, -1);
-                exchange.close();
+            if ("OPTIONS".equalsIgnoreCase(exchange.getRequestMethod())) {
+                exchange.sendResponseHeaders(204, -1); // No Content
                 return;
             }
 
-            if (!"POST".equalsIgnoreCase(method)) {
-                exchange.sendResponseHeaders(405, -1); // Método não permitido
-                exchange.close();
+            // Validação do sistema
+            String path = exchange.getRequestURI().getPath(); // /proxy/cliente ou /proxy/veiculo
+            String sistema = exchange.getRequestHeaders().getFirst("X-System-Name");
+
+            boolean autorizado =
+                    ("consulta-cliente".equals(sistema) && path.contains("/cliente")) ||
+                    ("consulta-veiculo".equals(sistema) && path.contains("/veiculo")) ||
+                    ("admin".equals(sistema));
+
+            if (!autorizado) {
+                String msg = "Acesso negado para o sistema: " + sistema;
+                exchange.sendResponseHeaders(403, msg.length());
+                exchange.getResponseBody().write(msg.getBytes());
+                exchange.getResponseBody().close();
                 return;
             }
 
-            // Lê o corpo da requisição enviada pelo front-end
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            exchange.getRequestBody().transferTo(baos);
-            byte[] requestBody = baos.toByteArray();
-
-            // Cria conexão com o serviço SOAP real
-            URL url = new URL(targetUrl);
+            // Repassa a requisição ao serviço SOAP original
+            URL url = new URL(destino);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("POST");
             conn.setDoOutput(true);
             conn.setRequestProperty("Content-Type", "text/xml;charset=UTF-8");
 
-            // Envia o corpo da requisição SOAP
-            try (OutputStream os = conn.getOutputStream()) {
-                os.write(requestBody);
+            try (InputStream is = exchange.getRequestBody();
+                 OutputStream os = conn.getOutputStream()) {
+                is.transferTo(os);
             }
 
-            // Lê a resposta do serviço SOAP
-            InputStream inputStream = conn.getInputStream();
-            byte[] response = inputStream.readAllBytes();
+            int status = conn.getResponseCode();
+            InputStream resposta = (status >= 400) ? conn.getErrorStream() : conn.getInputStream();
 
-            // Retorna resposta ao front-end com cabeçalhos CORS
-            exchange.getResponseHeaders().add("Content-Type", "text/xml;charset=UTF-8");
-            exchange.sendResponseHeaders(200, response.length);
-
-            OutputStream os = exchange.getResponseBody();
-            os.write(response);
-            os.close();
-            exchange.close();
+            byte[] body = resposta.readAllBytes();
+            exchange.sendResponseHeaders(status, body.length);
+            exchange.getResponseBody().write(body);
+            exchange.getResponseBody().close();
         }
     }
 }

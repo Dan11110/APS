@@ -41,9 +41,12 @@
           </soapenv:Body>
         </soapenv:Envelope>`;
 
-      const res = await fetch("http://localhost:9090/proxy/veiculo", {
+      const res = await fetch("http://localhost:9090/proxy/cliente", {
         method: "POST",
-        headers: { "Content-Type": "text/xml;charset=UTF-8" },
+        headers: {
+            "Content-Type": "text/xml;charset=UTF-8",
+            "X-System-Name": "consulta-veiculo"
+        },
         body: envelope
       });
 
