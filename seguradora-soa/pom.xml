@@ -13,18 +13,17 @@
     <maven.compiler.source>11</maven.compiler.source>
     <maven.compiler.target>11</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <main.class>br.com.seguradora.server.Publicador</main.class>
   </properties>
 
-<dependencies>
-  <!-- JAX-WS com API + Runtime -->
-  <dependency>
-    <groupId>com.sun.xml.ws</groupId>
-    <artifactId>jaxws-rt</artifactId>
-    <version>2.3.3</version>
-  </dependency>
+  <dependencies>
+    <!-- JAX-WS com API + Runtime -->
+    <dependency>
+      <groupId>com.sun.xml.ws</groupId>
+      <artifactId>jaxws-rt</artifactId>
+      <version>2.3.3</version>
+    </dependency>
 
- <dependency>
+    <dependency>
       <groupId>javax.json</groupId>
       <artifactId>javax.json-api</artifactId>
       <version>1.1.4</version>
@@ -35,7 +34,6 @@
       <version>1.1.4</version>
     </dependency>
   </dependencies>
-
 
   <build>
     <plugins>
@@ -57,12 +55,43 @@
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>exec-maven-plugin</artifactId>
         <version>3.1.0</version>
-        <configuration>
-          <mainClass>${main.class}</mainClass>
-        </configuration>
       </plugin>
 
     </plugins>
   </build>
+
+  <profiles>
+    <!-- Perfil para rodar o ProxyServer -->
+    <profile>
+      <id>proxy</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>exec-maven-plugin</artifactId>
+            <configuration>
+              <mainClass>br.com.seguradora.server.ProxyServer</mainClass>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+    <!-- Perfil para rodar o Publicador -->
+    <profile>
+      <id>publicador</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>exec-maven-plugin</artifactId>
+            <configuration>
+              <mainClass>br.com.seguradora.server.Publicador</mainClass>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 
 </project>

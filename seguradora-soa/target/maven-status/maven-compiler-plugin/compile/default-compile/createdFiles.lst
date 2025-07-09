@@ -1,9 +1,11 @@
-br\com\seguradora\service\VeiculoService.class
 br\com\seguradora\command\ConsultaClienteCommand.class
 br\com\seguradora\service\ClienteServiceImpl.class
-br\com\seguradora\command\Command.class
+br\com\seguradora\server\ProxyServer.class
 br\com\seguradora\command\Invoker.class
-br\com\seguradora\service\VeiculoServiceImpl.class
 br\com\seguradora\server\Publicador.class
+br\com\seguradora\server\ProxyServer$ProxyHandler.class
+br\com\seguradora\service\VeiculoService.class
+br\com\seguradora\command\Command.class
+br\com\seguradora\service\VeiculoServiceImpl.class
 br\com\seguradora\service\ClienteService.class
 br\com\seguradora\command\ConsultaVeiculoCommand.class
