@@ -9,5 +9,59 @@
         "validade": "2025-12-31"
       }
     ]
+  },
+  {
+    "cpf": "98765432100",
+    "nome": "João Silva",
+    "apolices": [
+      {
+        "numero": "102",
+        "tipo": "Residencial",
+        "validade": "2026-03-15"
+      },
+      {
+        "numero": "103",
+        "tipo": "Vida",
+        "validade": "2027-07-20"
+      }
+    ]
+  },
+  {
+    "cpf": "11122233344",
+    "nome": "Ana Souza",
+    "apolices": [
+      {
+        "numero": "104",
+        "tipo": "Auto",
+        "validade": "2025-09-30"
+      }
+    ]
+  },
+  {
+    "cpf": "55566677788",
+    "nome": "Carlos Lima",
+    "apolices": [
+      {
+        "numero": "105",
+        "tipo": "Empresarial",
+        "validade": "2026-01-10"
+      }
+    ]
+  },
+  {
+    "cpf": "99988877766",
+    "nome": "Fernanda Costa",
+    "apolices": [
+      {
+        "numero": "106",
+        "tipo": "Vida",
+        "validade": "2028-05-05"
+      },
+      {
+        "numero": "107",
+        "tipo": "Auto",
+        "validade": "2026-11-11"
+      }
+    ]
   }
 ]

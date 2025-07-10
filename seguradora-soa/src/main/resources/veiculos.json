@@ -36,5 +36,51 @@
         "descricao": "Farol dianteiro inexistente"
       }
     ]
+  },
+  {
+    "placa": "ABF1234",
+    "modelo": "Volkswagen Gol",
+    "ipvaPago": false,
+    "temRestricao": false,
+    "foiRoubado": false,
+    "multas": []
+  },
+  {
+    "placa": "ABG1234",
+    "modelo": "Chevrolet Onix",
+    "ipvaPago": true,
+    "temRestricao": false,
+    "foiRoubado": true,
+    "multas": [
+      {
+        "data": "2024-02-14",
+        "descricao": "Avanço de sinal vermelho"
+      }
+    ]
+  },
+  {
+    "placa": "ABH1234",
+    "modelo": "Renault Kwid",
+    "ipvaPago": false,
+    "temRestricao": true,
+    "foiRoubado": false,
+    "multas": [
+      {
+        "data": "2024-03-10",
+        "descricao": "Estacionamento em local proibido"
+      },
+      {
+        "data": "2024-04-05",
+        "descricao": "Documento vencido"
+      }
+    ]
+  },
+  {
+    "placa": "ABI1234",
+    "modelo": "Toyota Corolla",
+    "ipvaPago": true,
+    "temRestricao": false,
+    "foiRoubado": false,
+    "multas": []
   }
 ]
